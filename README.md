@@ -1,2 +1,2 @@
 # MATLAB-WFS
-Audio scene control and reproduction.
+Audioscene control and reproduction.
