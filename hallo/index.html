@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+  <title>HALLO - Höranstrengung</title>
+  <meta charset="UTF-8">
+
+  <style>
+    input[type=button] {
+      width:  90%;
+      height: 5%;
+      margin-top: 0.5%;
+      margin-left: 5%;
+      font-size: 30px;
+    }
+    body {
+      height: 100vh;
+      margin-top: 3vh;
+    }
+  </style>
+
+</head>
+
+<script type="text/javascript">
+
+var ws;
+var nButton = 14;
+var btString = ['mühelos',
+                '===',
+                'sehr wenig anstrengend',
+                '===',
+                'wenig anstrengend',
+                '===',
+                'mittelgradig anstrengend',
+                '===',
+                'deutlich anstrengend',
+                '===',
+                'sehr anstrengend',
+                '===',
+                'extrem anstrengend',
+                'nur Störgeräusch'  ];
+
+window.onload = function() {
+
+  ws = new WebSocket("ws://139.13.129.20:6666/");
+
+  ws.onmessage = function( event ) {
+
+    event = (event.data == "true");
+
+    for ( iButton = 15; iButton > 0; iButton-- ) {
+      document.getElementById(iButton).disabled = event;
+    }
+
+  }
+
+  for ( iButton = 14; iButton > 0; iButton-- )  {
+
+    addButton( iButton );
+
+  }
+
+  // cancel button
+  var bt = document.createElement("input");
+  bt.type       = "button";
+  bt.value      = "Abbrechen";
+  bt.id         = 15;
+  bt.setAttribute("onClick", "sendData(-1)")
+  bt.style.marginTop  = "75px";
+  bt.style.marginLeft = "75%";
+  bt.style.width      = "20%";
+  bt.disabled   = true;
+  document.body.appendChild(bt);
+
+};
+
+function addButton( iButton ) {
+
+  var bt = document.createElement("input");
+
+  bt.type       = "button";
+  bt.value      = btString[iButton-1];
+  bt.id         = iButton;
+  bt.setAttribute("onClick", "sendData(" + iButton + ")")
+  bt.disabled   = true;
+
+  if ( iButton == 14 ) {
+    bt.style.marginBottom = "30px";
+  }
+
+  document.body.appendChild(bt);
+
+}
+
+function sendData( id ) {
+  ws.send(id);
+}
+
+</script>
+
+<body>
+
+</body>
+
+</html>
